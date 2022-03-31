@@ -1,0 +1,1983 @@
+NOTE: PROCEDURE PRINTTO used (Total process time):
+      real time           0.08 seconds
+      cpu time            0.01 seconds
+      
+
+10                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+NOTE: %INCLUDE (level 1) ending.
+300   
+
+301   %let RE_ALLPRICE_CASLIB=&RE_OUTPUT_CASLIB.;
+302   %let RE_ALLPRICE_TABLE=&RE_PIPELINE_NAME._&RE_PROJECT_NAME._allprice;
+303   %let RE_ENVOUT_CASLIB=&RE_OUTPUT_CASLIB.;
+304   %let RE_ENVOUT_TABLE=_env03;
+305   %let RE_ENVTABLE_CASLIB=&RE_OUTPUT_CASLIB.;
+306   %let RE_ENVTABLE_TABLE=_env02;
+307   %let RE_EVAL_METH_LOGS_CASLIB=&RE_OUTPUT_CASLIB.;
+308   %let RE_EVAL_METH_LOGS_TABLE=&RE_PIPELINE_NAME._&RE_PROJECT_NAME._evalMethLog;
+309   
+310   
+311   /* Populate the environment table with details from the node: Evaluate Portfolio */
+312   proc cas;
+313       session &RE_CAS_SESSION_NAME.;
+314       source addToEnvSource;
+315   data "&RE_ENVOUT_TABLE."(caslib="&RE_ENVOUT_CASLIB.");
+316       set "&RE_ENVTABLE_TABLE."(caslib="&RE_ENVTABLE_CASLIB.");
+317       output;
+318       if _N_ eq 1 then do;
+319   
+320           /* Add the "EVAL_TYPE:INSTRUMENT" module. This module specifies the methods that are associated with the instrument
+320 ! type. */
+321           NAME="MGAL"; CATEGORY="EVAL_TYPE"; SUBCATEGORY="INSTRUMENT"; TABLEREF="";
+321 ! ATTRIBUTES='{"evaluationType":{"method":"MTG_MG_A"}}';
+322           output;
+323           NAME="MG_A"; CATEGORY="EVAL_TYPE"; SUBCATEGORY="INSTRUMENT"; TABLEREF="";
+323 ! ATTRIBUTES='{"evaluationType":{"method":"MTG_MGAL"}}';
+324           output;
+325   
+326           /* Add the "MODEL_GROUP_MAP:INSTRUMENT" module. This module specifies the model groups that are used to price an
+326 ! instrument type. */
+327           NAME="MTG_MG_A_MGAL"; CATEGORY="MODEL_GROUP_MAP"; SUBCATEGORY="INSTRUMENT"; TABLEREF="";
+327 ! ATTRIBUTES='{"modelGroupAttr":{"group":"MTG_MG_A","evalName":"MGAL","evalType":"INSTRUMENT"}}';
+328           output;
+329           NAME="MTG_MGAL_MG_A"; CATEGORY="MODEL_GROUP_MAP"; SUBCATEGORY="INSTRUMENT"; TABLEREF="";
+329 ! ATTRIBUTES='{"modelGroupAttr":{"group":"MTG_MGAL","evalName":"MG_A","evalType":"INSTRUMENT"}}';
+330           output;
+331   
+332           /* Add the "VARIABLE:PRICE" module. This module specifies the evaluation output variable definitions. */
+333           NAME="EL"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF=""; ATTRIBUTES='{"varAttr":{"label":"Expected
+333 ! Loss","role":"COMPUTED"},"outOpts":{}}';
+334           output;
+335           NAME="LGD"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+335 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+336           output;
+337           NAME="LGD_1"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+337 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+338           output;
+339           NAME="LGD_12"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+339 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+340           output;
+341           NAME="LGD_C"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+341 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+342           output;
+343           NAME="LGD_Downturn"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+343 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+11                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+344           output;
+345           NAME="LGD_Downturn_Markup"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+345 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+346           output;
+347           NAME="LGD_MOC"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+347 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+348           output;
+349           NAME="LGD_P_hat"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+349 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+350           output;
+351           NAME="LGD_RETAIL"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+351 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+352           output;
+353           NAME="LGD_R_A"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+353 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+354           output;
+355           NAME="LGD_VE_Ratio"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+355 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+356           output;
+357           NAME="LGD_p"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+357 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+358           output;
+359           NAME="RWA"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+359 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+360           output;
+361           NAME="RW_Gua"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+361 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+362           output;
+363           NAME="RW_obl"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+363 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+364           output;
+365           NAME="drawn_rwa"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+365 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+366           output;
+367           NAME="obligor_rwa"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+367 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+368           output;
+369           NAME="pd_lr"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+369 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+370           output;
+371           NAME="pd_master_scale"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+371 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+372           output;
+373           NAME="pd_mid"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+373 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+374           output;
+375           NAME="pd_score"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+375 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{"skipHolding":true,"skipShortPos":true,"skipALPos":true,"skipFx":true}}'
+375 ! ;
+376           output;
+377           NAME="pd_seg"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+377 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{"skipHolding":true,"skipShortPos":true,"skipALPos":true,"skipFx":true}}'
+377 ! ;
+378           output;
+379           NAME="undrawn_rwa"; CATEGORY="VARIABLE"; SUBCATEGORY="PRICE"; TABLEREF="";
+379 ! ATTRIBUTES='{"varAttr":{"role":"COMPUTED"},"outOpts":{}}';
+380           output;
+381   
+12                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+382       end;
+383   run;
+384       endsource;
+385       datastep.runcode result=res /
+386           single="yes",
+387           code = addToEnvSource;
+388   run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.02 seconds
+      cpu time            0.01 seconds
+      
+
+389   
+390   
+391   /* Include evaluation model groups */
+392   filename fref_3 filesrvc filename="eval_mg_MTG_MG_A.sas" folderuri="/folders/folders/a83bd802-e17a-4f3c-b86c-443d7ead2241";
+393   %include fref_3 /source2;
+NOTE: %INCLUDE (level 1) file FREF_3 is file eval_mg_MTG_MG_A.sas.
+394  +proc cas;
+395  +    session &RE_CAS_SESSION_NAME.;
+396  +    source addToEnvSource;
+397  +data "&RE_ENVOUT_TABLE."(caslib="&RE_ENVOUT_CASLIB.");
+398  +    set "&RE_ENVOUT_TABLE."(caslib="&RE_ENVTABLE_CASLIB.");
+399  +    output;
+400  +    if _N_ eq 1 then do;
+401  +        NAME="LGD_DOWNTURN_MARKUP_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+401 !+ATTRIBUTES='{"modelAttr":{"role":"LGD_DOWNTURN_MARKUP_LKP","group":"MTG_MG_A","method":"LGD_DOWNTURN_MARKUP_LKP","override":1}
+401 !+}'; output;
+402  +        NAME="LGD_Main"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+402 !+ATTRIBUTES='{"modelAttr":{"role":"LGD_Main","group":"MTG_MG_A","method":"LGD_Main","override":1}}'; output;
+403  +        NAME="LGD_MoC_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+403 !+ATTRIBUTES='{"modelAttr":{"role":"LGD_MoC_LKP","group":"MTG_MG_A","method":"LGD_MoC_LKP","override":1}}'; output;
+404  +        NAME="MG_A_PD"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+404 !+ATTRIBUTES='{"modelAttr":{"role":"MG_A_PD","group":"MTG_MG_A","method":"MG_A_PD","override":1}}'; output;
+405  +        NAME="MG_A_PD_Main"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+405 !+ATTRIBUTES='{"modelAttr":{"role":"MG_A_PD_Main","group":"MTG_MG_A","method":"MG_A_PD_Main","override":1}}'; output;
+406  +        NAME="MG_A_PD_Master_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+406 !+ATTRIBUTES='{"modelAttr":{"role":"MG_A_PD_Master_LKP","group":"MTG_MG_A","method":"MG_A_PD_Master_LKP","override":1}}'; output
+406 !+;
+407  +        NAME="MG_A_PD_SEG_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+407 !+ATTRIBUTES='{"modelAttr":{"role":"MG_A_PD_SEG_LKP","group":"MTG_MG_A","method":"MG_A_PD_SEG_LKP","override":1}}'; output;
+408  +        NAME="MTG_RWA"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+408 !+ATTRIBUTES='{"modelAttr":{"role":"MTG_RWA","group":"MTG_MG_A","method":"MTG_RWA","override":1}}'; output;
+409  +        NAME="PD_LRPD_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+409 !+ATTRIBUTES='{"modelAttr":{"role":"PD_LRPD_LKP","group":"MTG_MG_A","method":"PD_LRPD_LKP","override":1}}'; output;
+410  +        NAME="PD_MID_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+410 !+ATTRIBUTES='{"modelAttr":{"role":"PD_MID_LKP","group":"MTG_MG_A","method":"PD_MID_LKP","override":1}}'; output;
+411  +    end;
+412  +run;
+413  +    endsource;
+414  +    datastep.runcode result=res /
+415  +        single="yes",
+416  +        code = addToEnvSource;
+417  +run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+
+13                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+418  +
+419  +%macro get_methods_1;
+420  +
+421  +    /* ----------------------------------------------------------------------
+422  +     * Model name: LGD_DOWNTURN_MARKUP_LKP
+423  +     * Model method name: LGD_DOWNTURN_MARKUP_LKP
+424  +     * Description: Lookup Downturn Markup value based on Portfolio
+425  +     * Form: Code
+426  +     * ----------------------------------------------------------------------*/
+427  +      method LGD_DOWNTURN_MARKUP_LKP kind=model ;
+428  +
+429  +    beginblock main;
+430  +          _model_.result = .;
+431  +
+432  +
+433  +    if _portfolio in ('SBE-3','SME','SENIORS ACCOMODATIONS','HOTEL MOTEL','H-SME CRE')
+434  +        then LGD_Downturn_Markup = 0.1;
+435  +
+436  +    else if _portfolio in ('SBE-1','SBE-2','SBE-4','SBE-4B','SBE-4N')
+437  +        then LGD_Downturn_Markup = 0.15;
+438  +
+439  +    else if _portfolio in ('Retail Non-Mtg')
+440  +        then LGD_Downturn_Markup = 0.2;
+441  +
+442  +    else if _portfolio in ('Retail A Mtg','Retail Alt-A Mtg')
+443  +        then LGD_Downturn_Markup = 0.25;
+444  +
+445  +
+446  +          _model_.is_prob = 0;
+447  +    endblock;
+448  +      endmethod;
+449  +
+450  +
+451  +    /* ----------------------------------------------------------------------
+452  +     * Model name: LGD_Main
+453  +     * Model method name: LGD_Main
+454  +     * Description: v1.0.0 LGD Model Code
+455  +     * Form: Code
+456  +     * ----------------------------------------------------------------------*/
+457  +      method LGD_Main kind=model ;
+458  +
+459  +    /************************ LGD MODEL ***************************
+460  +    **
+461  +    ** risk drivers                      set up for simulation
+462  +    ** ==========================================================
+463  +    ** Portfolio
+464  +    ** SecurityCode
+465  +    ** Beacon                                    x
+466  +    ** LGD_Addon
+467  +    ** Updated_Asset_Value_1Y
+468  +    ** EAD
+469  +    *************************************************************
+470  +    ** Output Variables:;
+14                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+471  +    ** LGD_R_A
+472  +    ** LGD_MOC
+473  +    ** LGD_C
+474  +    ** LGD_P_hat
+475  +    ** LGD_VE_Ratio
+476  +    ** LGD_p
+477  +    ** LGD_p2
+478  +    ** LGD_1
+479  +    ** LGD_12
+480  +    ** LGD
+481  +    ** LGD_Downturn_Markup
+482  +    ** LGD_Downturn
+483  +    ** LGD_RETAIL
+484  +    *************************************************************/
+485  +
+486  +    /* test comment 223*/
+487  +
+488  +    beginblock main;
+489  +          _model_.result = .;
+490  +
+491  +
+492  +    if portfolio in ("SBE2 Equifax","SBE2 Paynet")
+493  +        then _portfolio = "SBE-2";
+494  +         else _portfolio = portfolio;
+495  +
+496  +    ****LGD_R_A;
+497  +    if SecurityCode = 301 then do;
+498  +        if Beacon < 540 then LGD_R_A = 0.4535;
+499  +            else LGD_R_A = 0.5653;
+500  +    end;
+501  +    else if SecurityCode  <> 301 then LGD_R_A = 0.4309;
+502  +    ****LGD_MOC;
+503  +    if Portfolio = 'Retail A Mtg' then LGD_MOC = 0.12;
+504  +        else LGD_MOC = 0;
+505  +
+506  +    ****LGD_C;
+507  +    if Portfolio = 'Retail A Mtg' then LGD_C = 1.17;
+508  +        else LGD_C = 0.94;
+509  +
+510  +    ****LGD_P_hat;
+511  +    if Portfolio = 'Retail A Mtg' then LGD_P_hat = 0.745;
+512  +        else LGD_P_hat = 0.776;
+513  +
+514  +    ****LGD_VE_Ratio;
+515  +    if EAD <=0 then LGD_VE_Ratio = .;
+516  +        else LGD_VE_Ratio = Updated_Asset_Value_1Y/EAD;
+517  +
+518  +    ****************************************************************************************;
+519  +    ****LGD_p;
+520  +    if LGD_VE_Ratio =. then LGD_p = 1;
+521  +        else if LGD_VE_Ratio >=1 then LGD_p = LGD_P_hat;
+522  +        else if LGD_VE_Ratio <1 then LGD_p = 1;
+523  +
+524  +    ****LGD_p2;
+525  +    if LGD_VE_Ratio < 0.9 or LGD_VE_Ratio = . then LGD_p2 = 0;
+526  +        else if LGD_VE_Ratio < 2.5 then LGD_p2 = min(1,LGD_C*(0.33+0.27*LGD_VE_Ratio));
+527  +        else if LGD_VE_Ratio >=2.5 then LGD_p2 = 1;
+528  +
+15                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+529  +    ****LGD_1;
+530  +    if EAD <=0 or EAD = . then LGD_1 = 0;
+531  +        else if EAD >0 then LGD_1 = max(0,sum(1,-Updated_Asset_Value_1Y*LGD_R_A/EAD));
+532  +
+533  +    ****LGD_12;
+534  +    LGD_12 = (1-LGD_p2)*(LGD_1+LGD_MOC)+LGD_p2*0.05+0.006;
+535  +
+536  +    ****LGD_MoC;
+537  +
+538  +    call run_model("LGD_MoC_LKP");
+539  +    /* LGD_MoC = _model_.result; */
+540  +
+541  +    ****LGD;
+542  +
+543  +    if portfolio in ('Retail A Mtg','Retail Alt-A Mtg')
+544  +        then LGD = sum(LGD_12*LGD_p+0.02*(1-LGD_p),LGD_MoC);
+545  +    *else if portfolio in ('Retail Non-Mtg') then join on  SecurityCode and lookup LGD_WO_AIRB  ;
+546  +    *else 0.75;
+547  +
+548  +    **** LGD_Downturn_Markup;
+549  +
+550  +    call run_model("LGD_DOWNTURN_MARKUP_LKP");
+551  +
+552  +
+553  +    **** LGD_Downturn;
+554  +
+555  +
+556  +    if portfolio in ('Retail A Mtg','Retail Alt-A Mtg','Retail Non-Mtg')
+557  +        then LGD_Downturn = LGD*(1+LGD_Downturn_Markup);
+558  +    *else LGD_Downturn = commercial final LGD;
+559  +
+560  +    *** SCRI_Addon; ** Derived in ETL unique value for each account;
+561  +    SCRI_Addon= 0.25; *LGD_Addon;
+562  +
+563  +    LGD_Retail = max(LGD_Downturn,LGD+SCRI_Addon,0.1);
+564  +
+565  +
+566  +
+567  +          _model_.is_prob = 0;
+568  +    endblock;
+569  +      endmethod;
+570  +
+571  +
+572  +    /* ----------------------------------------------------------------------
+573  +     * Model name: LGD_MoC_LKP
+574  +     * Model method name: LGD_MoC_LKP
+575  +     * Description: Lookup Margin of Conservatism based on Portfolio
+576  +     * Form: Code
+577  +     * ----------------------------------------------------------------------*/
+578  +      method LGD_MoC_LKP kind=model ;
+579  +
+580  +    beginblock main;
+581  +          _model_.result = .;
+582  +
+583  +
+584  +         if _portfolio in ('Retail Non-Mtg','Bank','GOVERNMENT','LARGE
+584 !+CORP','SBE-1','SBE-2','SBE-4','SBE-4B','SBE-4N','SBE-3','INF')
+585  +            then LGD_MoC = 0.00;
+16                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+586  +
+587  +    else if _portfolio in ('Retail Alt-A Mtg','OIL GAS PROD','SME','SENIORS ACCOMODATIONS','HOTEL MOTEL','H-SME CRE','MEDIUM
+587 !+IREE','SMALL IREE','RE-LOC','LARGE IREE','BUILDERS LINES')
+588  +            then LGD_MoC = 0.01;
+589  +
+590  +    else if _portfolio in ('IPRE')
+591  +            then LGD_MoC = 0.0125;
+592  +
+593  +    else if _portfolio in ('Retail A Mtg')
+594  +            then LGD_MoC = 0.02;
+595  +
+596  +
+597  +
+598  +          _model_.is_prob = 0;
+599  +    endblock;
+600  +      endmethod;
+601  +
+602  +
+603  +    /* ----------------------------------------------------------------------
+604  +     * Model name: MG_A_PD
+605  +     * Model method name: MG_A_PD
+606  +     * Description: v1.0.0
+607  +     * Form: Linear
+608  +     * ----------------------------------------------------------------------*/
+609  +      method MG_A_PD kind=model ;
+610  +
+611  +        beginblock STATIC_INIT;
+612  +          _v_mg_a_pd_brokerage2 = (brokerage = 'Mortgage broker');
+613  +          _v_mg_a_pd_daysb4run1 = (0<=days_before_run_scorecard_a & days_before_run_scorecard_a<=161);
+614  +          _v_mg_a_pd_daysb4run2 = (161<days_before_run_scorecard_a & days_before_run_scorecard_a<=438);
+615  +          _v_mg_a_pd_daysb4run3 = (438<days_before_run_scorecard_a & days_before_run_scorecard_a<1023);
+616  +          _v_mg_a_pd_loantype1 = (Loan_type = 'H');
+617  +          _v_mg_a_pd_loantype2 = (Loan_type = 'P');
+618  +          _v_mg_a_pd_loantype3 = (Loan_type = 'S');
+619  +          _v_mg_a_pd_loantype4 = (Loan_type = 'LOC');
+620  +          _v_mg_a_pd_loantype5 = (Loan_type = 'POP');
+621  +          _static_xbeta__MG_A_PD_ = 509.0
+622  +                                  + 14.0*_v_mg_a_pd_brokerage2
+623  +                                  + 24.0*_v_mg_a_pd_daysb4run1
+624  +                                  + 11.0*_v_mg_a_pd_daysb4run2
+625  +                                  + 1.0*_v_mg_a_pd_daysb4run3
+626  +                                  + 30.0*_v_mg_a_pd_loantype1
+627  +                                  + 30.0*_v_mg_a_pd_loantype2
+628  +                                  + 30.0*_v_mg_a_pd_loantype3
+629  +                                  + 30.0*_v_mg_a_pd_loantype4
+630  +                                  + 30.0*_v_mg_a_pd_loantype5;
+631  +        endblock;
+632  +
+633  +        beginblock MAIN;
+634  +          _model_.result = .;
+635  +          _v_mg_a_pd_beacon2 = (620<=_beacon & _beacon<680);
+636  +          _v_mg_a_pd_beacon3 = (680<_beacon & _beacon<=717);
+637  +          _v_mg_a_pd_beacon4 = (717<_beacon & _beacon<=762);
+638  +          _v_mg_a_pd_beacon5 = (762<_beacon & _beacon<=787);
+639  +          _v_mg_a_pd_beacon6 = (787<_beacon & _beacon<=9999);
+640  +          _v_mg_a_pd_deldays1 = (missing(_max_delinquent_days));
+641  +          _v_mg_a_pd_deldays2 = (0<=_max_delinquent_days & _max_delinquent_days<=5);
+642  +          _v_mg_a_pd_deldays3 = (6<=_max_delinquent_days & _max_delinquent_days<=11);
+17                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+643  +          _v_mg_a_pd_gds1 = (0<=_gds & _gds<=0.13);
+644  +          _v_mg_a_pd_gds2 = (0.13<_gds & _gds<=0.2);
+645  +          _v_mg_a_pd_gds3 = (0.2<_gds & _gds<=0.39);
+646  +          _v_mg_a_pd_ltv1 = (0<=_origination_ltv2 & _origination_ltv2<=0.16);
+647  +          _v_mg_a_pd_ltv2 = (0.16<_origination_ltv2 & _origination_ltv2<=0.4);
+648  +          _v_mg_a_pd_ltv3 = (0.4<_origination_ltv2 & _origination_ltv2<=0.62);
+649  +          _v_mg_a_pd_ltv4 = (0.62<_origination_ltv2 & _origination_ltv2<=0.75);
+650  +          _v_mg_a_pd_ltv6 = (missing(_origination_ltv2));
+651  +          _xbeta_ = _static_xbeta__MG_A_PD_
+652  +                  + 26.0*_v_mg_a_pd_beacon2
+653  +                  + 41.0*_v_mg_a_pd_beacon3
+654  +                  + 65.0*_v_mg_a_pd_beacon4
+655  +                  + 72.0*_v_mg_a_pd_beacon5
+656  +                  + 102.0*_v_mg_a_pd_beacon6
+657  +                  + 61.0*_v_mg_a_pd_deldays1
+658  +                  + 67.0*_v_mg_a_pd_deldays2
+659  +                  + 40.0*_v_mg_a_pd_deldays3
+660  +                  + 74.0*_v_mg_a_pd_gds1
+661  +                  + 14.0*_v_mg_a_pd_gds2
+662  +                  + 3.0*_v_mg_a_pd_gds3
+663  +                  + 22.0*_v_mg_a_pd_ltv1
+664  +                  + 11.0*_v_mg_a_pd_ltv2
+665  +                  + 8.0*_v_mg_a_pd_ltv3
+666  +                  + 3.0*_v_mg_a_pd_ltv4
+667  +                  + 3.0*_v_mg_a_pd_ltv6;
+668  +
+669  +          _model_.result = _xbeta_*_model_.override;
+670  +          _model_.is_prob = 0;
+671  +        endblock;
+672  +
+673  +      endmethod;
+674  +
+675  +
+676  +    /* ----------------------------------------------------------------------
+677  +     * Model name: MG_A_PD_Main
+678  +     * Model method name: MG_A_PD_Main
+679  +     * Description: v1.0.0
+680  +     * Form: Code
+681  +     * ----------------------------------------------------------------------*/
+682  +      method MG_A_PD_Main kind=model ;
+683  +
+684  +    BEGINBLOCK main;
+685  +          _model_.result = .;
+686  +
+687  +
+688  +    /*************************************************************/
+689  +    /**                start of PD model                        **/
+690  +    /*************************************************************/
+691  +    /* apply the risk factors to the input variables */
+692  +
+693  +    _beacon              = beacon              *_beacon_rf_.region;
+694  +    _Origination_LTV2    = Origination_LTV2    *_ltv_rf_.region;
+695  +    _GDS                 = GDS                 *_gds_rf_.region;
+696  +    _max_delinquent_days = max_delinquent_days *maxDD_rf;
+697  +
+698  +    /* run the PD model */
+699  +      call run_model("MG_A_PD");
+700  +      pd_score = _model_.result;
+18                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+701  +
+702  +    /* apply pd segment value */
+703  +      call run_model("MG_A_PD_SEG_LKP");
+704  +      PD_SEG= _model_.result;
+705  +
+706  +    /* apply pd master scale */
+707  +      call run_model("MG_A_PD_Master_LKP");
+708  +      pd_master_scale = _model_.result;
+709  +
+710  +    /* apply long run pd */
+711  +       call run_model("PD_LRPD_LKP");
+712  +      pd_lr = _model_.result;
+713  +
+714  +    /* apply mid point pd */
+715  +      call run_model("PD_MID_LKP");
+716  +      pd_mid = _model_.result;
+717  +
+718  +    /*************************************************************/
+719  +    /**                end of PD model                          **/
+720  +    /*************************************************************/
+721  +
+722  +
+723  +
+724  +
+725  +
+726  +          _model_.is_prob = 0;
+727  +    endblock;
+728  +      endmethod;
+729  +
+730  +
+731  +    /* ----------------------------------------------------------------------
+732  +     * Model name: MG_A_PD_Master_LKP
+733  +     * Model method name: MG_A_PD_Master_LKP
+734  +     * Description: v1.0.0
+735  +     * Form: Linear
+736  +     * ----------------------------------------------------------------------*/
+737  +      method MG_A_PD_Master_LKP kind=model ;
+738  +
+739  +        beginblock MAIN;
+740  +          _model_.result = .;
+741  +          _v_MG_PD_master1 = (755<pd_score & pd_score<=9999);
+742  +          _v_MG_PD_master10 = (614<pd_score & pd_score<=635);
+743  +          _v_MG_PD_master12 = (578<pd_score & pd_score<=614);
+744  +          _v_MG_PD_master16 = (0<=pd_score & pd_score<=578);
+745  +          _v_MG_PD_master2 = (707<pd_score & pd_score<=755);
+746  +          _v_MG_PD_master3 = (669<pd_score & pd_score<=707);
+747  +          _v_MG_PD_master6 = (655<pd_score & pd_score<=669);
+748  +          _v_MG_PD_master8 = (635<pd_score & pd_score<=655);
+749  +          _xbeta_ = 1.0*_v_MG_PD_master1
+750  +                  + 10.0*_v_MG_PD_master10
+751  +                  + 12.0*_v_MG_PD_master12
+752  +                  + 16.0*_v_MG_PD_master16
+753  +                  + 2.0*_v_MG_PD_master2
+754  +                  + 3.0*_v_MG_PD_master3
+755  +                  + 6.0*_v_MG_PD_master6
+756  +                  + 8.0*_v_MG_PD_master8;
+757  +
+758  +          _model_.result = _xbeta_*_model_.override;
+19                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+759  +          _model_.is_prob = 0;
+760  +        endblock;
+761  +
+762  +      endmethod;
+763  +
+764  +
+765  +    /* ----------------------------------------------------------------------
+766  +     * Model name: MG_A_PD_SEG_LKP
+767  +     * Model method name: MG_A_PD_SEG_LKP
+768  +     * Description: v1.0.0 PD score to segmentation mapping
+769  +     * Form: Linear
+770  +     * ----------------------------------------------------------------------*/
+771  +      method MG_A_PD_SEG_LKP kind=model ;
+772  +
+773  +        beginblock MAIN;
+774  +          _model_.result = .;
+775  +          _v_MG_A_PD_SEG1 = (0<=PD_SCORE & PD_SCORE<=578);
+776  +          _v_MG_A_PD_SEG2 = (578<PD_SCORE & PD_SCORE<=614);
+777  +          _v_MG_A_PD_SEG3 = (614<PD_SCORE & PD_SCORE<=635);
+778  +          _v_MG_A_PD_SEG4 = (635<PD_SCORE & PD_SCORE<=655);
+779  +          _v_MG_A_PD_SEG5 = (655<PD_SCORE & PD_SCORE<=669);
+780  +          _v_MG_A_PD_SEG6 = (669<PD_SCORE & PD_SCORE<=707);
+781  +          _v_MG_A_PD_SEG7 = (707<PD_SCORE & PD_SCORE<=755);
+782  +          _v_MG_A_PD_SEG8 = (755<PD_SCORE & PD_SCORE<=9999);
+783  +          _xbeta_ = 8.0*_v_MG_A_PD_SEG1
+784  +                  + 7.0*_v_MG_A_PD_SEG2
+785  +                  + 6.0*_v_MG_A_PD_SEG3
+786  +                  + 5.0*_v_MG_A_PD_SEG4
+787  +                  + 4.0*_v_MG_A_PD_SEG5
+788  +                  + 3.0*_v_MG_A_PD_SEG6
+789  +                  + 2.0*_v_MG_A_PD_SEG7
+790  +                  + 1.0*_v_MG_A_PD_SEG8;
+791  +
+792  +          _model_.result = _xbeta_*_model_.override;
+793  +          _model_.is_prob = 0;
+794  +        endblock;
+795  +
+796  +      endmethod;
+797  +
+798  +
+799  +    /* ----------------------------------------------------------------------
+800  +     * Model name: MTG_RWA
+801  +     * Model method name: MTG_RWA
+802  +     * Form: Code
+803  +     * ----------------------------------------------------------------------*/
+804  +      method MTG_RWA kind=model ;
+805  +
+806  +    beginblock main;
+807  +          _model_.result = .;
+808  +
+809  +
+810  +
+811  +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC') then  _PD_Guar=CMHC_PD;
+812  +    else
+813  +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('GENWORTH') then _PD_Guar=GW_PD;
+814  +
+815  +                rw_obl=rw_obl(E_A_BCAR_Treatment, E_A_Mortgage_Insurance_Desc_BCAR, _pd, _lgd, r_2a, 0 , rw_multiplier, _ETM);
+816  +
+20                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+817  +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC' 'GENWORTH') then do;
+818  +                rw_gua=rw_gua(E_A_BCAR_Treatment, E_A_Mortgage_Insurance_Desc_BCAR,_pd_guar, _lgd, r_2a, rw_multiplier, _ETM);
+819  +
+820  +       if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('GENWORTH') then
+821  +          do;
+822  +
+823  +              Drawn_RWA     =0.1*(_drawn_ead * min(rw_obl, rw_gua));
+824  +              Undrawn_RWA   =0.1*(_Undrawn_EAD * min(rw_obl, rw_gua));
+825  +              RWA           =0.1*(_EAD_CAD * min(rw_obl, rw_gua));
+826  +          end;
+827  +      else
+828  +      if  upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC') then
+829  +          do;
+830  +              Drawn_RWA     =_drawn_ead * min(rw_obl, rw_gua);
+831  +              Undrawn_RWA   =_Undrawn_EAD * min(rw_obl, rw_gua);
+832  +              RWA           =_EAD_CAD * min(rw_obl, rw_gua);
+833  +          end;
+834  +
+835  +     end;
+836  +     else do;
+837  +              Drawn_RWA     =_drawn_ead * rw_obl;
+838  +              Undrawn_RWA   =_Undrawn_EAD * rw_obl;
+839  +              RWA           =_EAD_CAD * rw_obl;
+840  +     end;
+841  +
+842  +        Obligor_RWA     =rw_obl*_EAD_CAD;
+843  +
+844  +
+845  +          _model_.is_prob = 0;
+846  +    endblock;
+847  +      endmethod;
+848  +
+849  +
+850  +    /* ----------------------------------------------------------------------
+851  +     * Model name: PD_LRPD_LKP
+852  +     * Model method name: PD_LRPD_LKP
+853  +     * Description: resolve segment to Long run PD
+854  +     * Form: Linear
+855  +     * ----------------------------------------------------------------------*/
+856  +      method PD_LRPD_LKP kind=model ;
+857  +
+858  +        beginblock MAIN;
+859  +          _model_.result = .;
+860  +          _v_PD_LRPD1 = (pd_master_scale = '1');
+861  +          _v_PD_LRPD10 = (pd_master_scale = '10');
+862  +          _v_PD_LRPD11 = (pd_master_scale = '11');
+863  +          _v_PD_LRPD12 = (pd_master_scale = '12');
+864  +          _v_PD_LRPD13 = (pd_master_scale = '13');
+865  +          _v_PD_LRPD14 = (pd_master_scale = '14');
+866  +          _v_PD_LRPD15 = (pd_master_scale = '15');
+867  +          _v_PD_LRPD16 = (pd_master_scale = '16');
+868  +          _v_PD_LRPD17 = (pd_master_scale = '17');
+869  +          _v_PD_LRPD18 = (pd_master_scale = '18');
+870  +          _v_PD_LRPD19 = (pd_master_scale = '19');
+871  +          _v_PD_LRPD2 = (pd_master_scale = '2');
+872  +          _v_PD_LRPD20 = (pd_master_scale = '20');
+873  +          _v_PD_LRPD3 = (pd_master_scale = '3');
+874  +          _v_PD_LRPD4 = (pd_master_scale = '4');
+21                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+875  +          _v_PD_LRPD5 = (pd_master_scale = '5');
+876  +          _v_PD_LRPD6 = (pd_master_scale = '6');
+877  +          _v_PD_LRPD7 = (pd_master_scale = '7');
+878  +          _v_PD_LRPD8 = (pd_master_scale = '8');
+879  +          _v_PD_LRPD9 = (pd_master_scale = '9');
+880  +          _xbeta_ = 0.0002*_v_PD_LRPD1
+881  +                  + 0.012*_v_PD_LRPD10
+882  +                  + 0.0244*_v_PD_LRPD11
+883  +                  + 0.0321*_v_PD_LRPD12
+884  +                  + 0.0461*_v_PD_LRPD13
+885  +                  + 0.02285*_v_PD_LRPD14
+886  +                  + 0.0918*_v_PD_LRPD15
+887  +                  + 0.1245*_v_PD_LRPD16
+888  +                  + 0.15*_v_PD_LRPD17
+889  +                  + 0.1809*_v_PD_LRPD18
+890  +                  + 0.3*_v_PD_LRPD19
+891  +                  + 0.0007*_v_PD_LRPD2
+892  +                  + 0.4721*_v_PD_LRPD20
+893  +                  + 0.0012*_v_PD_LRPD3
+894  +                  + 0.00045*_v_PD_LRPD4
+895  +                  + 0.0021*_v_PD_LRPD5
+896  +                  + 0.0025*_v_PD_LRPD6
+897  +                  + 0.0043*_v_PD_LRPD7
+898  +                  + 0.0063*_v_PD_LRPD8
+899  +                  + 0.0109*_v_PD_LRPD9;
+900  +
+901  +          _model_.result = _xbeta_*_model_.override;
+902  +          _model_.is_prob = 0;
+903  +        endblock;
+904  +
+905  +      endmethod;
+906  +
+907  +
+908  +    /* ----------------------------------------------------------------------
+909  +     * Model name: PD_MID_LKP
+910  +     * Model method name: PD_MID_LKP
+911  +     * Description: resolve segment to mid point PD
+912  +     * Form: Linear
+913  +     * ----------------------------------------------------------------------*/
+914  +      method PD_MID_LKP kind=model ;
+915  +
+916  +        beginblock MAIN;
+917  +          _model_.result = .;
+918  +          _v_PD_MID1 = (pd_master_scale = '1');
+919  +          _v_PD_MID10 = (pd_master_scale = '10');
+920  +          _v_PD_MID11 = (pd_master_scale = '11');
+921  +          _v_PD_MID12 = (pd_master_scale = '12');
+922  +          _v_PD_MID13 = (pd_master_scale = '13');
+923  +          _v_PD_MID14 = (pd_master_scale = '14');
+924  +          _v_PD_MID15 = (pd_master_scale = '15');
+925  +          _v_PD_MID16 = (pd_master_scale = '16');
+926  +          _v_PD_MID17 = (pd_master_scale = '17');
+927  +          _v_PD_MID18 = (pd_master_scale = '18');
+928  +          _v_PD_MID19 = (pd_master_scale = '19');
+929  +          _v_PD_MID2 = (pd_master_scale = '2');
+930  +          _v_PD_MID20 = (pd_master_scale = '20');
+931  +          _v_PD_MID3 = (pd_master_scale = '3');
+932  +          _v_PD_MID4 = (pd_master_scale = '4');
+22                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+933  +          _v_PD_MID5 = (pd_master_scale = '5');
+934  +          _v_PD_MID6 = (pd_master_scale = '6');
+935  +          _v_PD_MID7 = (pd_master_scale = '7');
+936  +          _v_PD_MID8 = (pd_master_scale = '8');
+937  +          _v_PD_MID9 = (pd_master_scale = '9');
+938  +          _xbeta_ = 0.0005*_v_PD_MID1
+939  +                  + 0.014*_v_PD_MID10
+940  +                  + 0.02*_v_PD_MID11
+941  +                  + 0.03*_v_PD_MID12
+942  +                  + 0.04*_v_PD_MID13
+943  +                  + 0.06*_v_PD_MID14
+944  +                  + 0.08*_v_PD_MID15
+945  +                  + 0.11*_v_PD_MID16
+946  +                  + 0.16*_v_PD_MID17
+947  +                  + 0.21*_v_PD_MID18
+948  +                  + 0.38*_v_PD_MID19
+949  +                  + 0.0007*_v_PD_MID2
+950  +                  + 0.55*_v_PD_MID20
+951  +                  + 0.0011*_v_PD_MID3
+952  +                  + 0.0015*_v_PD_MID4
+953  +                  + 0.002*_v_PD_MID5
+954  +                  + 0.0028*_v_PD_MID6
+955  +                  + 0.0043*_v_PD_MID7
+956  +                  + 0.0065*_v_PD_MID8
+957  +                  + 0.01*_v_PD_MID9;
+958  +
+959  +          _model_.result = _xbeta_*_model_.override;
+960  +          _model_.is_prob = 0;
+961  +        endblock;
+962  +
+963  +      endmethod;
+964  +
+965  +
+966  +    /* ----------------------------------------------------------------------
+967  +     * Model group name: MTG_MG_A
+968  +     * Description: v1.0.0
+969  +     * ----------------------------------------------------------------------*/
+970  +    method MTG_MG_A kind=evaluation;
+971  +
+972  +     BEGINBLOCK main;
+973  +
+974  +     /************************ PD MODEL ***************************
+975  +     **
+976  +     ** risk drivers                      set up for simulation
+977  +     ** ==========================================================
+978  +     ** Loan_Type
+979  +     ** Brokerage
+980  +     ** Origination_LTV2                         x
+981  +     ** Max_Delinquent_Days                      x
+982  +     ** Beacon                                   x
+983  +     ** GDS                                      x
+984  +     ** Days_Before_Run_Scorecard_A
+985  +     ** Customer
+986  +     *************************************************************
+987  +     ** output variables
+988  +     ** pd_score
+989  +     ** pd_seg
+990  +     ** pd_master_scale
+23                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+991  +     ** lr_pd
+992  +     ** mid_pd
+993  +     *************************************************************/
+994  +
+995  +                 call run_model("MG_A_PD_Main");
+996  +
+997  +
+998  +     /************************ LGD MODEL ***************************
+999  +     **
+1000 +     ** risk drivers                      set up for simulation
+1001 +     ** ==========================================================
+1002 +     ** Portfolio
+1003 +     ** SecurityCode
+1004 +     ** Beacon                                    x
+1005 +     ** LGD_Addon
+1006 +     ** Updated_Asset_Value_1Y
+1007 +     ** EAD
+1008 +     *************************************************************
+1009 +     ** Output Variables:;
+1010 +     ** LGD_R_A
+1011 +     ** LGD_MOC
+1012 +     ** LGD_C
+1013 +     ** LGD_P_hat
+1014 +     ** LGD_VE_Ratio
+1015 +     ** LGD_p
+1016 +     ** LGD_p2
+1017 +     ** LGD_1
+1018 +     ** LGD_12
+1019 +     ** LGD
+1020 +     ** LGD_Downturn_Markup
+1021 +     ** LGD_Downturn
+1022 +     ** LGD_RETAIL
+1023 +     *************************************************************/
+1024 +
+1025 +
+1026 +                 call run_model("LGD_Main");  * Common_models remove _MORTGAGE_;
+1027 +
+1028 +                 _pd = pd_lr;
+1029 +                 _lgd = lgd;
+1030 +                 _etm = etm;
+1031 +                 _drawn_ead = drawn_ead;
+1032 +                 _undrawn_ead = undrawn_ead;
+1033 +                 _ead_cad = ead;
+1034 +
+1035 +
+1036 +
+1037 +                     call run_model("MTG_RWA");
+1038 +
+1039 +                 EL = /*pd_lr*(lgd_retail/100)**/ ead;
+1040 +
+1041 +     endblock;
+1042 +
+1043 +
+1044 +    endmethod;
+1045 +
+1046 +
+1047 +%mend get_methods_1;
+1048 +proc cas;
+24                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1049 +    session &RE_CAS_SESSION_NAME.;
+1050 +    source method_code;
+1051 +        %get_methods_1;
+1052 +    endsource;
+1053 +
+1054 +    action riskMethods.add /
+1055 +        methodTable= {caslib="&RE_OUTPUT_CASLIB." name="&RE_PIPELINE_NAME._&RE_PROJECT_NAME._evalMeth"}
+1056 +        methodCode= method_code
+1057 +        envTable = {caslib = "&RE_ENVOUT_CASLIB." name = "&RE_ENVOUT_TABLE."}
+1058 +        envOut = {table = {caslib = "&RE_ENVOUT_CASLIB." name = "&RE_ENVOUT_TABLE."}}
+1059 +    ;
+1060 +run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Numeric value converted to character.
+NOTE: The table '_env03' in caslib 'Public' has 80 observations and 7 variables.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.05 seconds
+25                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+      cpu time            0.02 seconds
+      
+
+NOTE: %INCLUDE (level 1) ending.
+1061  
+1062  /* Include evaluation model groups */
+1063  filename fref_4 filesrvc filename="eval_mg_MTG_MGAL.sas" folderuri="/folders/folders/a83bd802-e17a-4f3c-b86c-443d7ead2241";
+1064  %include fref_4 /source2;
+NOTE: %INCLUDE (level 1) file FREF_4 is file eval_mg_MTG_MGAL.sas.
+1065 +proc cas;
+1066 +    session &RE_CAS_SESSION_NAME.;
+1067 +    source addToEnvSource;
+1068 +data "&RE_ENVOUT_TABLE."(caslib="&RE_ENVOUT_CASLIB.");
+1069 +    set "&RE_ENVOUT_TABLE."(caslib="&RE_ENVTABLE_CASLIB.");
+1070 +    output;
+1071 +    if _N_ eq 1 then do;
+1072 +        NAME="LGD_DOWNTURN_MARKUP_LKP_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1072!+ATTRIBUTES='{"modelAttr":{"role":"LGD_DOWNTURN_MARKUP_LKP","group":"MTG_MGAL","method":"LGD_DOWNTURN_MARKUP_LKP_2","override":
+1072!+1}}'; output;
+1073 +        NAME="LGD_Main_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1073!+ATTRIBUTES='{"modelAttr":{"role":"LGD_Main","group":"MTG_MGAL","method":"LGD_Main_2","override":1}}'; output;
+1074 +        NAME="LGD_MoC_LKP_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1074!+ATTRIBUTES='{"modelAttr":{"role":"LGD_MoC_LKP","group":"MTG_MGAL","method":"LGD_MoC_LKP_2","override":1}}'; output;
+1075 +        NAME="MGAL_PD"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1075!+ATTRIBUTES='{"modelAttr":{"role":"MGAL_PD","group":"MTG_MGAL","method":"MGAL_PD","override":1}}'; output;
+1076 +        NAME="MGAL_PD_Main"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1076!+ATTRIBUTES='{"modelAttr":{"role":"MGAL_PD_Main","group":"MTG_MGAL","method":"MGAL_PD_Main","override":1}}'; output;
+1077 +        NAME="MGAL_PD_Master_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1077!+ATTRIBUTES='{"modelAttr":{"role":"MGAL_PD_Master_LKP","group":"MTG_MGAL","method":"MGAL_PD_Master_LKP","override":1}}'; output
+1077!+;
+1078 +        NAME="MGAL_PD_SEG_LKP"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1078!+ATTRIBUTES='{"modelAttr":{"role":"MGAL_PD_SEG_LKP","group":"MTG_MGAL","method":"MGAL_PD_SEG_LKP","override":1}}'; output;
+1079 +        NAME="MTG_RWA_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1079!+ATTRIBUTES='{"modelAttr":{"role":"MTG_RWA","group":"MTG_MGAL","method":"MTG_RWA_2","override":1}}'; output;
+1080 +        NAME="PD_LRPD_LKP_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1080!+ATTRIBUTES='{"modelAttr":{"role":"PD_LRPD_LKP","group":"MTG_MGAL","method":"PD_LRPD_LKP_2","override":1}}'; output;
+1081 +        NAME="PD_MID_LKP_2"; CATEGORY="MODEL"; SUBCATEGORY=""; TABLEREF="";
+1081!+ATTRIBUTES='{"modelAttr":{"role":"PD_MID_LKP","group":"MTG_MGAL","method":"PD_MID_LKP_2","override":1}}'; output;
+1082 +    end;
+1083 +run;
+1084 +    endsource;
+1085 +    datastep.runcode result=res /
+1086 +        single="yes",
+1087 +        code = addToEnvSource;
+1088 +run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.01 seconds
+      cpu time            0.01 seconds
+      
+
+1089 +
+1090 +%macro get_methods_2;
+1091 +
+1092 +    /* ----------------------------------------------------------------------
+1093 +     * Model name: LGD_DOWNTURN_MARKUP_LKP
+1094 +     * Model method name: LGD_DOWNTURN_MARKUP_LKP_2
+26                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1095 +     * Description: Lookup Downturn Markup value based on Portfolio
+1096 +     * Form: Code
+1097 +     * ----------------------------------------------------------------------*/
+1098 +      method LGD_DOWNTURN_MARKUP_LKP_2 kind=model ;
+1099 +
+1100 +    beginblock main;
+1101 +          _model_.result = .;
+1102 +
+1103 +
+1104 +    if _portfolio in ('SBE-3','SME','SENIORS ACCOMODATIONS','HOTEL MOTEL','H-SME CRE')
+1105 +        then LGD_Downturn_Markup = 0.1;
+1106 +
+1107 +    else if _portfolio in ('SBE-1','SBE-2','SBE-4','SBE-4B','SBE-4N')
+1108 +        then LGD_Downturn_Markup = 0.15;
+1109 +
+1110 +    else if _portfolio in ('Retail Non-Mtg')
+1111 +        then LGD_Downturn_Markup = 0.2;
+1112 +
+1113 +    else if _portfolio in ('Retail A Mtg','Retail Alt-A Mtg')
+1114 +        then LGD_Downturn_Markup = 0.25;
+1115 +
+1116 +
+1117 +          _model_.is_prob = 0;
+1118 +    endblock;
+1119 +      endmethod;
+1120 +
+1121 +
+1122 +    /* ----------------------------------------------------------------------
+1123 +     * Model name: LGD_Main
+1124 +     * Model method name: LGD_Main_2
+1125 +     * Description: v1.0.0 LGD Model Code
+1126 +     * Form: Code
+1127 +     * ----------------------------------------------------------------------*/
+1128 +      method LGD_Main_2 kind=model ;
+1129 +
+1130 +    /************************ LGD MODEL ***************************
+1131 +    **
+1132 +    ** risk drivers                      set up for simulation
+1133 +    ** ==========================================================
+1134 +    ** Portfolio
+1135 +    ** SecurityCode
+1136 +    ** Beacon                                    x
+1137 +    ** LGD_Addon
+1138 +    ** Updated_Asset_Value_1Y
+1139 +    ** EAD
+1140 +    *************************************************************
+1141 +    ** Output Variables:;
+1142 +    ** LGD_R_A
+1143 +    ** LGD_MOC
+1144 +    ** LGD_C
+1145 +    ** LGD_P_hat
+1146 +    ** LGD_VE_Ratio
+1147 +    ** LGD_p
+1148 +    ** LGD_p2
+1149 +    ** LGD_1
+1150 +    ** LGD_12
+1151 +    ** LGD
+1152 +    ** LGD_Downturn_Markup
+27                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1153 +    ** LGD_Downturn
+1154 +    ** LGD_RETAIL
+1155 +    *************************************************************/
+1156 +
+1157 +    /* test comment 223*/
+1158 +
+1159 +    beginblock main;
+1160 +          _model_.result = .;
+1161 +
+1162 +
+1163 +    if portfolio in ("SBE2 Equifax","SBE2 Paynet")
+1164 +        then _portfolio = "SBE-2";
+1165 +         else _portfolio = portfolio;
+1166 +
+1167 +    ****LGD_R_A;
+1168 +    if SecurityCode = 301 then do;
+1169 +        if Beacon < 540 then LGD_R_A = 0.4535;
+1170 +            else LGD_R_A = 0.5653;
+1171 +    end;
+1172 +    else if SecurityCode  <> 301 then LGD_R_A = 0.4309;
+1173 +    ****LGD_MOC;
+1174 +    if Portfolio = 'Retail A Mtg' then LGD_MOC = 0.12;
+1175 +        else LGD_MOC = 0;
+1176 +
+1177 +    ****LGD_C;
+1178 +    if Portfolio = 'Retail A Mtg' then LGD_C = 1.17;
+1179 +        else LGD_C = 0.94;
+1180 +
+1181 +    ****LGD_P_hat;
+1182 +    if Portfolio = 'Retail A Mtg' then LGD_P_hat = 0.745;
+1183 +        else LGD_P_hat = 0.776;
+1184 +
+1185 +    ****LGD_VE_Ratio;
+1186 +    if EAD <=0 then LGD_VE_Ratio = .;
+1187 +        else LGD_VE_Ratio = Updated_Asset_Value_1Y/EAD;
+1188 +
+1189 +    ****************************************************************************************;
+1190 +    ****LGD_p;
+1191 +    if LGD_VE_Ratio =. then LGD_p = 1;
+1192 +        else if LGD_VE_Ratio >=1 then LGD_p = LGD_P_hat;
+1193 +        else if LGD_VE_Ratio <1 then LGD_p = 1;
+1194 +
+1195 +    ****LGD_p2;
+1196 +    if LGD_VE_Ratio < 0.9 or LGD_VE_Ratio = . then LGD_p2 = 0;
+1197 +        else if LGD_VE_Ratio < 2.5 then LGD_p2 = min(1,LGD_C*(0.33+0.27*LGD_VE_Ratio));
+1198 +        else if LGD_VE_Ratio >=2.5 then LGD_p2 = 1;
+1199 +
+1200 +    ****LGD_1;
+1201 +    if EAD <=0 or EAD = . then LGD_1 = 0;
+1202 +        else if EAD >0 then LGD_1 = max(0,sum(1,-Updated_Asset_Value_1Y*LGD_R_A/EAD));
+1203 +
+1204 +    ****LGD_12;
+1205 +    LGD_12 = (1-LGD_p2)*(LGD_1+LGD_MOC)+LGD_p2*0.05+0.006;
+1206 +
+1207 +    ****LGD_MoC;
+1208 +
+1209 +    call run_model("LGD_MoC_LKP");
+1210 +    /* LGD_MoC = _model_.result; */
+28                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1211 +
+1212 +    ****LGD;
+1213 +
+1214 +    if portfolio in ('Retail A Mtg','Retail Alt-A Mtg')
+1215 +        then LGD = sum(LGD_12*LGD_p+0.02*(1-LGD_p),LGD_MoC);
+1216 +    *else if portfolio in ('Retail Non-Mtg') then join on  SecurityCode and lookup LGD_WO_AIRB  ;
+1217 +    *else 0.75;
+1218 +
+1219 +    **** LGD_Downturn_Markup;
+1220 +
+1221 +    call run_model("LGD_DOWNTURN_MARKUP_LKP");
+1222 +
+1223 +
+1224 +    **** LGD_Downturn;
+1225 +
+1226 +
+1227 +    if portfolio in ('Retail A Mtg','Retail Alt-A Mtg','Retail Non-Mtg')
+1228 +        then LGD_Downturn = LGD*(1+LGD_Downturn_Markup);
+1229 +    *else LGD_Downturn = commercial final LGD;
+1230 +
+1231 +    *** SCRI_Addon; ** Derived in ETL unique value for each account;
+1232 +    SCRI_Addon= 0.25; *LGD_Addon;
+1233 +
+1234 +    LGD_Retail = max(LGD_Downturn,LGD+SCRI_Addon,0.1);
+1235 +
+1236 +
+1237 +
+1238 +          _model_.is_prob = 0;
+1239 +    endblock;
+1240 +      endmethod;
+1241 +
+1242 +
+1243 +    /* ----------------------------------------------------------------------
+1244 +     * Model name: LGD_MoC_LKP
+1245 +     * Model method name: LGD_MoC_LKP_2
+1246 +     * Description: Lookup Margin of Conservatism based on Portfolio
+1247 +     * Form: Code
+1248 +     * ----------------------------------------------------------------------*/
+1249 +      method LGD_MoC_LKP_2 kind=model ;
+1250 +
+1251 +    beginblock main;
+1252 +          _model_.result = .;
+1253 +
+1254 +
+1255 +         if _portfolio in ('Retail Non-Mtg','Bank','GOVERNMENT','LARGE
+1255!+CORP','SBE-1','SBE-2','SBE-4','SBE-4B','SBE-4N','SBE-3','INF')
+1256 +            then LGD_MoC = 0.00;
+1257 +
+1258 +    else if _portfolio in ('Retail Alt-A Mtg','OIL GAS PROD','SME','SENIORS ACCOMODATIONS','HOTEL MOTEL','H-SME CRE','MEDIUM
+1258!+IREE','SMALL IREE','RE-LOC','LARGE IREE','BUILDERS LINES')
+1259 +            then LGD_MoC = 0.01;
+1260 +
+1261 +    else if _portfolio in ('IPRE')
+1262 +            then LGD_MoC = 0.0125;
+1263 +
+1264 +    else if _portfolio in ('Retail A Mtg')
+1265 +            then LGD_MoC = 0.02;
+1266 +
+29                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1267 +
+1268 +
+1269 +          _model_.is_prob = 0;
+1270 +    endblock;
+1271 +      endmethod;
+1272 +
+1273 +
+1274 +    /* ----------------------------------------------------------------------
+1275 +     * Model name: MGAL_PD
+1276 +     * Model method name: MGAL_PD
+1277 +     * Description: v1.0.0
+1278 +     * Form: Linear
+1279 +     * ----------------------------------------------------------------------*/
+1280 +      method MGAL_PD kind=model ;
+1281 +
+1282 +        beginblock STATIC_INIT;
+1283 +          _v_MGAL_PD_daysb4scorecard1 = (0<=Days_Before_Run_Scorecard_AL & Days_Before_Run_Scorecard_AL<=0.16);
+1284 +          _v_MGAL_PD_daysb4scorecard2 = (0.16<Days_Before_Run_Scorecard_AL & Days_Before_Run_Scorecard_AL<=0.41);
+1285 +          _v_MGAL_PD_daysb4scorecard3 = (0.41<Days_Before_Run_Scorecard_AL & Days_Before_Run_Scorecard_AL<=1.94);
+1286 +          _v_MGAL_PD_income1 = (0<=Income_Type & Income_Type<=0);
+1287 +          _v_MGAL_PD_income2 = (1<=Income_Type & Income_Type<=1);
+1288 +          _v_MGAL_PD_income3 = (2<=Income_Type & Income_Type<=2);
+1289 +          _v_MGAL_PD_income4 = (3<=Income_Type & Income_Type<=3);
+1290 +          _v_MGAL_PD_income5 = (4<=Income_Type & Income_Type<=4);
+1291 +          _v_MGAL_PD_income6 = (5<=Income_Type & Income_Type<=5);
+1292 +          _v_MGAL_PD_income7 = (6<=Income_Type & Income_Type<=6);
+1293 +          _v_MGAL_PD_income8 = (7<=Income_Type & Income_Type<=7);
+1294 +          _static_xbeta__MGAL_PD_ = 492.0
+1295 +                                  + 19.0*_v_MGAL_PD_daysb4scorecard1
+1296 +                                  + 10.0*_v_MGAL_PD_daysb4scorecard2
+1297 +                                  + 5.0*_v_MGAL_PD_daysb4scorecard3
+1298 +                                  + 11.0*_v_MGAL_PD_income1
+1299 +                                  + 6.0*_v_MGAL_PD_income2
+1300 +                                  + 3.0*_v_MGAL_PD_income3
+1301 +                                  + 16.0*_v_MGAL_PD_income4
+1302 +                                  + 9.0*_v_MGAL_PD_income5
+1303 +                                  + 5.0*_v_MGAL_PD_income6
+1304 +                                  + 2.0*_v_MGAL_PD_income7
+1305 +                                  + 1.0*_v_MGAL_PD_income8;
+1306 +        endblock;
+1307 +
+1308 +        beginblock MAIN;
+1309 +          _model_.result = .;
+1310 +          _v_MGAL_PD_beacon2 = (566<=_beacon & _beacon<=601);
+1311 +          _v_MGAL_PD_beacon3 = (602<=_beacon & _beacon<=625);
+1312 +          _v_MGAL_PD_beacon4 = (626<=_beacon & _beacon<=658);
+1313 +          _v_MGAL_PD_beacon5 = (659<=_beacon & _beacon<=694);
+1314 +          _v_MGAL_PD_beacon6 = (695<=_beacon & _beacon<=751);
+1315 +          _v_MGAL_PD_beacon7 = (752<=_beacon & _beacon<=999);
+1316 +          _v_MGAL_PD_beacon8 = (missing(_beacon));
+1317 +          _v_MGAL_PD_days2mat2 = (0.21<_Days_to_maturity & _Days_to_maturity<=0.59);
+1318 +          _v_MGAL_PD_days2mat3 = (0.59<_Days_to_maturity & _Days_to_maturity<=0.92);
+1319 +          _v_MGAL_PD_days2mat4 = (0.92<_Days_to_maturity & _Days_to_maturity<=999);
+1320 +          _v_MGAL_PD_deldays1 = (missing(_Max_Delinquent_Days));
+1321 +          _v_MGAL_PD_deldays2 = (0<=_Max_Delinquent_Days & _Max_Delinquent_Days<=5);
+1322 +          _v_MGAL_PD_deldays3 = (6<=_Max_Delinquent_Days & _Max_Delinquent_Days<=11);
+1323 +          _xbeta_ = _static_xbeta__MGAL_PD_
+1324 +                  + 21.0*_v_MGAL_PD_beacon2
+30                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1325 +                  + 24.0*_v_MGAL_PD_beacon3
+1326 +                  + 37.0*_v_MGAL_PD_beacon4
+1327 +                  + 47.0*_v_MGAL_PD_beacon5
+1328 +                  + 56.0*_v_MGAL_PD_beacon6
+1329 +                  + 59.0*_v_MGAL_PD_beacon7
+1330 +                  + 21.0*_v_MGAL_PD_beacon8
+1331 +                  + 8.0*_v_MGAL_PD_days2mat2
+1332 +                  + 17.0*_v_MGAL_PD_days2mat3
+1333 +                  + 26.0*_v_MGAL_PD_days2mat4
+1334 +                  + 51.0*_v_MGAL_PD_deldays1
+1335 +                  + 63.0*_v_MGAL_PD_deldays2
+1336 +                  + 34.0*_v_MGAL_PD_deldays3;
+1337 +
+1338 +          _model_.result = _xbeta_*_model_.override;
+1339 +          _model_.is_prob = 0;
+1340 +        endblock;
+1341 +
+1342 +      endmethod;
+1343 +
+1344 +
+1345 +    /* ----------------------------------------------------------------------
+1346 +     * Model name: MGAL_PD_Main
+1347 +     * Model method name: MGAL_PD_Main
+1348 +     * Description: v1.0.0
+1349 +     * Form: Code
+1350 +     * ----------------------------------------------------------------------*/
+1351 +      method MGAL_PD_Main kind=model ;
+1352 +
+1353 +
+1354 +    BEGINBLOCK main;
+1355 +          _model_.result = .;
+1356 +
+1357 +
+1358 +    /* apply the risk factors to the input variables */
+1359 +
+1360 +
+1361 +    /* add the risk factors to the input variables */
+1362 +    _Max_Delinquent_Days = Max_Delinquent_Days*maxdd_rf;
+1363 +    _beacon              = beacon             *_beacon_rf_.region;
+1364 +    _Days_to_maturity    = Days_to_maturity   *daymat_rf;
+1365 +
+1366 +    /* run the PD model */
+1367 +
+1368 +      call run_model("MGAL_PD");
+1369 +      pd_score = _model_.result;
+1370 +
+1371 +      /* apply pd segment value - input value is pd_score*/
+1372 +      CALL RUN_MODEL("MGAL_PD_SEG_LKP");
+1373 +      pd_seg= _model_.result;
+1374 +
+1375 +     /* apply pd master scale - input value is pd_score*/
+1376 +      call run_model("MGAL_PD_Master_LKP");
+1377 +      pd_master_scale = _model_.result;
+1378 +
+1379 +     /* apply long run pd - input value is pd_master_scale*/
+1380 +        call run_model("PD_LRPD_LKP");
+1381 +      pd_lr = _model_.result;
+1382 +
+31                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1383 +      /* apply mid point pd - input value is pd_master_scale*/
+1384 +      call run_model("PD_MID_LKP");
+1385 +      pd_mid = _model_.result;
+1386 +
+1387 +
+1388 +
+1389 +
+1390 +
+1391 +          _model_.is_prob = 0;
+1392 +    endblock;
+1393 +      endmethod;
+1394 +
+1395 +
+1396 +    /* ----------------------------------------------------------------------
+1397 +     * Model name: MGAL_PD_Master_LKP
+1398 +     * Model method name: MGAL_PD_Master_LKP
+1399 +     * Description: v1.0.0
+1400 +     * Form: Linear
+1401 +     * ----------------------------------------------------------------------*/
+1402 +      method MGAL_PD_Master_LKP kind=model ;
+1403 +
+1404 +        beginblock MAIN;
+1405 +          _model_.result = .;
+1406 +          _v_MG_PD_master11 = (619<pd_score & pd_score<=640);
+1407 +          _v_MG_PD_master13 = (600<pd_score & pd_score<=619);
+1408 +          _v_MG_PD_master15 = (564<pd_score & pd_score<=600);
+1409 +          _v_MG_PD_master18 = (552<pd_score & pd_score<=564);
+1410 +          _v_MG_PD_master20 = (0<=pd_score & pd_score<=552);
+1411 +          _v_MG_PD_master7 = (653<pd_score & pd_score<=9999);
+1412 +          _v_MG_PD_master9 = (640<pd_score & pd_score<=653);
+1413 +          _xbeta_ = 11.0*_v_MG_PD_master11
+1414 +                  + 13.0*_v_MG_PD_master13
+1415 +                  + 15.0*_v_MG_PD_master15
+1416 +                  + 18.0*_v_MG_PD_master18
+1417 +                  + 20.0*_v_MG_PD_master20
+1418 +                  + 7.0*_v_MG_PD_master7
+1419 +                  + 9.0*_v_MG_PD_master9;
+1420 +
+1421 +          _model_.result = _xbeta_*_model_.override;
+1422 +          _model_.is_prob = 0;
+1423 +        endblock;
+1424 +
+1425 +      endmethod;
+1426 +
+1427 +
+1428 +    /* ----------------------------------------------------------------------
+1429 +     * Model name: MGAL_PD_SEG_LKP
+1430 +     * Model method name: MGAL_PD_SEG_LKP
+1431 +     * Description: v1.0.0 Mapping pd_score to pd_seg
+1432 +     * Form: Linear
+1433 +     * ----------------------------------------------------------------------*/
+1434 +      method MGAL_PD_SEG_LKP kind=model ;
+1435 +
+1436 +        beginblock MAIN;
+1437 +          _model_.result = .;
+1438 +          _v_MG_A_PD_SEG1 = (0<=pd_score & pd_score<=552);
+1439 +          _v_MG_A_PD_SEG2 = (552<pd_score & pd_score<=564);
+1440 +          _v_MG_A_PD_SEG3 = (564<pd_score & pd_score<=600);
+32                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1441 +          _v_MG_A_PD_SEG4 = (600<pd_score & pd_score<=619);
+1442 +          _v_MG_A_PD_SEG5 = (619<pd_score & pd_score<=640);
+1443 +          _v_MG_A_PD_SEG6 = (640<pd_score & pd_score<=653);
+1444 +          _v_MG_A_PD_SEG7 = (653<pd_score & pd_score<=9999);
+1445 +          _xbeta_ = 7.0*_v_MG_A_PD_SEG1
+1446 +                  + 6.0*_v_MG_A_PD_SEG2
+1447 +                  + 5.0*_v_MG_A_PD_SEG3
+1448 +                  + 4.0*_v_MG_A_PD_SEG4
+1449 +                  + 3.0*_v_MG_A_PD_SEG5
+1450 +                  + 2.0*_v_MG_A_PD_SEG6
+1451 +                  + 1.0*_v_MG_A_PD_SEG7;
+1452 +
+1453 +          _model_.result = _xbeta_*_model_.override;
+1454 +          _model_.is_prob = 0;
+1455 +        endblock;
+1456 +
+1457 +      endmethod;
+1458 +
+1459 +
+1460 +    /* ----------------------------------------------------------------------
+1461 +     * Model name: MTG_RWA
+1462 +     * Model method name: MTG_RWA_2
+1463 +     * Form: Code
+1464 +     * ----------------------------------------------------------------------*/
+1465 +      method MTG_RWA_2 kind=model ;
+1466 +
+1467 +    beginblock main;
+1468 +          _model_.result = .;
+1469 +
+1470 +
+1471 +
+1472 +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC') then  _PD_Guar=CMHC_PD;
+1473 +    else
+1474 +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('GENWORTH') then _PD_Guar=GW_PD;
+1475 +
+1476 +                rw_obl=rw_obl(E_A_BCAR_Treatment, E_A_Mortgage_Insurance_Desc_BCAR, _pd, _lgd, r_2a, 0 , rw_multiplier, _ETM);
+1477 +
+1478 +    if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC' 'GENWORTH') then do;
+1479 +                rw_gua=rw_gua(E_A_BCAR_Treatment, E_A_Mortgage_Insurance_Desc_BCAR,_pd_guar, _lgd, r_2a, rw_multiplier, _ETM);
+1480 +
+1481 +       if upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('GENWORTH') then
+1482 +          do;
+1483 +
+1484 +              Drawn_RWA     =0.1*(_drawn_ead * min(rw_obl, rw_gua));
+1485 +              Undrawn_RWA   =0.1*(_Undrawn_EAD * min(rw_obl, rw_gua));
+1486 +              RWA           =0.1*(_EAD_CAD * min(rw_obl, rw_gua));
+1487 +          end;
+1488 +      else
+1489 +      if  upcase(E_A_Mortgage_Insurance_Desc_BCAR) in ('CMHC') then
+1490 +          do;
+1491 +              Drawn_RWA     =_drawn_ead * min(rw_obl, rw_gua);
+1492 +              Undrawn_RWA   =_Undrawn_EAD * min(rw_obl, rw_gua);
+1493 +              RWA           =_EAD_CAD * min(rw_obl, rw_gua);
+1494 +          end;
+1495 +
+1496 +     end;
+1497 +     else do;
+1498 +              Drawn_RWA     =_drawn_ead * rw_obl;
+33                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1499 +              Undrawn_RWA   =_Undrawn_EAD * rw_obl;
+1500 +              RWA           =_EAD_CAD * rw_obl;
+1501 +     end;
+1502 +
+1503 +        Obligor_RWA     =rw_obl*_EAD_CAD;
+1504 +
+1505 +
+1506 +          _model_.is_prob = 0;
+1507 +    endblock;
+1508 +      endmethod;
+1509 +
+1510 +
+1511 +    /* ----------------------------------------------------------------------
+1512 +     * Model name: PD_LRPD_LKP
+1513 +     * Model method name: PD_LRPD_LKP_2
+1514 +     * Description: resolve segment to Long run PD
+1515 +     * Form: Linear
+1516 +     * ----------------------------------------------------------------------*/
+1517 +      method PD_LRPD_LKP_2 kind=model ;
+1518 +
+1519 +        beginblock MAIN;
+1520 +          _model_.result = .;
+1521 +          _v_PD_LRPD1 = (pd_master_scale = '1');
+1522 +          _v_PD_LRPD10 = (pd_master_scale = '10');
+1523 +          _v_PD_LRPD11 = (pd_master_scale = '11');
+1524 +          _v_PD_LRPD12 = (pd_master_scale = '12');
+1525 +          _v_PD_LRPD13 = (pd_master_scale = '13');
+1526 +          _v_PD_LRPD14 = (pd_master_scale = '14');
+1527 +          _v_PD_LRPD15 = (pd_master_scale = '15');
+1528 +          _v_PD_LRPD16 = (pd_master_scale = '16');
+1529 +          _v_PD_LRPD17 = (pd_master_scale = '17');
+1530 +          _v_PD_LRPD18 = (pd_master_scale = '18');
+1531 +          _v_PD_LRPD19 = (pd_master_scale = '19');
+1532 +          _v_PD_LRPD2 = (pd_master_scale = '2');
+1533 +          _v_PD_LRPD20 = (pd_master_scale = '20');
+1534 +          _v_PD_LRPD3 = (pd_master_scale = '3');
+1535 +          _v_PD_LRPD4 = (pd_master_scale = '4');
+1536 +          _v_PD_LRPD5 = (pd_master_scale = '5');
+1537 +          _v_PD_LRPD6 = (pd_master_scale = '6');
+1538 +          _v_PD_LRPD7 = (pd_master_scale = '7');
+1539 +          _v_PD_LRPD8 = (pd_master_scale = '8');
+1540 +          _v_PD_LRPD9 = (pd_master_scale = '9');
+1541 +          _xbeta_ = 0.0002*_v_PD_LRPD1
+1542 +                  + 0.012*_v_PD_LRPD10
+1543 +                  + 0.0244*_v_PD_LRPD11
+1544 +                  + 0.0321*_v_PD_LRPD12
+1545 +                  + 0.0461*_v_PD_LRPD13
+1546 +                  + 0.02285*_v_PD_LRPD14
+1547 +                  + 0.0918*_v_PD_LRPD15
+1548 +                  + 0.1245*_v_PD_LRPD16
+1549 +                  + 0.15*_v_PD_LRPD17
+1550 +                  + 0.1809*_v_PD_LRPD18
+1551 +                  + 0.3*_v_PD_LRPD19
+1552 +                  + 0.0007*_v_PD_LRPD2
+1553 +                  + 0.4721*_v_PD_LRPD20
+1554 +                  + 0.0012*_v_PD_LRPD3
+1555 +                  + 0.00045*_v_PD_LRPD4
+1556 +                  + 0.0021*_v_PD_LRPD5
+34                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1557 +                  + 0.0025*_v_PD_LRPD6
+1558 +                  + 0.0043*_v_PD_LRPD7
+1559 +                  + 0.0063*_v_PD_LRPD8
+1560 +                  + 0.0109*_v_PD_LRPD9;
+1561 +
+1562 +          _model_.result = _xbeta_*_model_.override;
+1563 +          _model_.is_prob = 0;
+1564 +        endblock;
+1565 +
+1566 +      endmethod;
+1567 +
+1568 +
+1569 +    /* ----------------------------------------------------------------------
+1570 +     * Model name: PD_MID_LKP
+1571 +     * Model method name: PD_MID_LKP_2
+1572 +     * Description: resolve segment to mid point PD
+1573 +     * Form: Linear
+1574 +     * ----------------------------------------------------------------------*/
+1575 +      method PD_MID_LKP_2 kind=model ;
+1576 +
+1577 +        beginblock MAIN;
+1578 +          _model_.result = .;
+1579 +          _v_PD_MID1 = (pd_master_scale = '1');
+1580 +          _v_PD_MID10 = (pd_master_scale = '10');
+1581 +          _v_PD_MID11 = (pd_master_scale = '11');
+1582 +          _v_PD_MID12 = (pd_master_scale = '12');
+1583 +          _v_PD_MID13 = (pd_master_scale = '13');
+1584 +          _v_PD_MID14 = (pd_master_scale = '14');
+1585 +          _v_PD_MID15 = (pd_master_scale = '15');
+1586 +          _v_PD_MID16 = (pd_master_scale = '16');
+1587 +          _v_PD_MID17 = (pd_master_scale = '17');
+1588 +          _v_PD_MID18 = (pd_master_scale = '18');
+1589 +          _v_PD_MID19 = (pd_master_scale = '19');
+1590 +          _v_PD_MID2 = (pd_master_scale = '2');
+1591 +          _v_PD_MID20 = (pd_master_scale = '20');
+1592 +          _v_PD_MID3 = (pd_master_scale = '3');
+1593 +          _v_PD_MID4 = (pd_master_scale = '4');
+1594 +          _v_PD_MID5 = (pd_master_scale = '5');
+1595 +          _v_PD_MID6 = (pd_master_scale = '6');
+1596 +          _v_PD_MID7 = (pd_master_scale = '7');
+1597 +          _v_PD_MID8 = (pd_master_scale = '8');
+1598 +          _v_PD_MID9 = (pd_master_scale = '9');
+1599 +          _xbeta_ = 0.0005*_v_PD_MID1
+1600 +                  + 0.014*_v_PD_MID10
+1601 +                  + 0.02*_v_PD_MID11
+1602 +                  + 0.03*_v_PD_MID12
+1603 +                  + 0.04*_v_PD_MID13
+1604 +                  + 0.06*_v_PD_MID14
+1605 +                  + 0.08*_v_PD_MID15
+1606 +                  + 0.11*_v_PD_MID16
+1607 +                  + 0.16*_v_PD_MID17
+1608 +                  + 0.21*_v_PD_MID18
+1609 +                  + 0.38*_v_PD_MID19
+1610 +                  + 0.0007*_v_PD_MID2
+1611 +                  + 0.55*_v_PD_MID20
+1612 +                  + 0.0011*_v_PD_MID3
+1613 +                  + 0.0015*_v_PD_MID4
+1614 +                  + 0.002*_v_PD_MID5
+35                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1615 +                  + 0.0028*_v_PD_MID6
+1616 +                  + 0.0043*_v_PD_MID7
+1617 +                  + 0.0065*_v_PD_MID8
+1618 +                  + 0.01*_v_PD_MID9;
+1619 +
+1620 +          _model_.result = _xbeta_*_model_.override;
+1621 +          _model_.is_prob = 0;
+1622 +        endblock;
+1623 +
+1624 +      endmethod;
+1625 +
+1626 +
+1627 +    /* ----------------------------------------------------------------------
+1628 +     * Model group name: MTG_MGAL
+1629 +     * Description: v1.0.0
+1630 +     * ----------------------------------------------------------------------*/
+1631 +    method MTG_MGAL kind=evaluation;
+1632 +
+1633 +     BEGINBLOCK main;
+1634 +
+1635 +     /************************ PD MODEL ***************************
+1636 +     **
+1637 +     ** risk drivers                      set up for simulation
+1638 +     ** ==========================================================
+1639 +     ** Max_Delinquent_Days                      x
+1640 +     ** Beacon                                   x
+1641 +     ** Days_to_maturity                         x
+1642 +     ** Days_Before_Run_Scorecard_A
+1643 +     ** Customer
+1644 +     ** income_type
+1645 +     *************************************************************
+1646 +     ** output variables
+1647 +     ** pd_score
+1648 +     ** pd_seg
+1649 +     ** pd_master_scale
+1650 +     ** pd_lr
+1651 +     ** pd_mid
+1652 +     *************************************************************/
+1653 +
+1654 +
+1655 +                         call run_model("MGAL_PD_Main");
+1656 +
+1657 +
+1658 +     /************************ LGD MODEL ***************************
+1659 +     **
+1660 +     ** risk drivers                      set up for simulation
+1661 +     ** ==========================================================
+1662 +     ** Portfolio
+1663 +     ** SecurityCode
+1664 +     ** Beacon                                    x
+1665 +     ** LGD_Addon
+1666 +     ** Updated_Asset_Value_1Y
+1667 +     ** EAD
+1668 +     *************************************************************
+1669 +     ** Output Variables:;
+1670 +     ** LGD_R_A
+1671 +     ** LGD_MOC
+1672 +     ** LGD_C
+36                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1673 +     ** LGD_P_hat
+1674 +     ** LGD_VE_Ratio
+1675 +     ** LGD_p
+1676 +     ** LGD_p2
+1677 +     ** LGD_1
+1678 +     ** LGD_12
+1679 +     ** LGD
+1680 +     ** LGD_Downturn_Markup
+1681 +     ** LGD_Downturn
+1682 +     ** LGD_RETAIL
+1683 +     *************************************************************/
+1684 +
+1685 +
+1686 +                 call run_model("LGD_Main");  * Common_models remove _MORTGAGE_;
+1687 +
+1688 +
+1689 +                 _pd = pd_lr;
+1690 +                 _lgd = lgd;
+1691 +                 _etm = etm;
+1692 +                 _drawn_ead = drawn_ead;
+1693 +                 _undrawn_ead = undrawn_ead;
+1694 +                 _ead_cad = ead;
+1695 +
+1696 +                 call run_model("MTG_RWA");
+1697 +
+1698 +
+1699 +                 EL = /*pd_lr*(lgd_retail/100)**/ ead;
+1700 +
+1701 +
+1702 +     endblock;
+1703 +    endmethod;
+1704 +
+1705 +
+1706 +%mend get_methods_2;
+1707 +proc cas;
+1708 +    session &RE_CAS_SESSION_NAME.;
+1709 +    source method_code;
+1710 +        %get_methods_2;
+1711 +    endsource;
+1712 +
+1713 +    action riskMethods.add /
+1714 +        appendTable = TRUE
+1715 +        methodTable= {caslib="&RE_OUTPUT_CASLIB." name="&RE_PIPELINE_NAME._&RE_PROJECT_NAME._evalMeth"}
+1716 +        methodCode= method_code
+1717 +        envTable = {caslib = "&RE_ENVOUT_CASLIB." name = "&RE_ENVOUT_TABLE."}
+1718 +        envOut = {table = {caslib = "&RE_ENVOUT_CASLIB." name = "&RE_ENVOUT_TABLE."}}
+1719 +    ;
+1720 +run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+37                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Numeric value converted to character.
+NOTE: Numeric value converted to character.
+NOTE: The table '_env03' in caslib 'Public' has 90 observations and 7 variables.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.07 seconds
+      cpu time            0.02 seconds
+      
+
+NOTE: %INCLUDE (level 1) ending.
+1721  
+
+1722  proc cas;
+1723      session &RE_CAS_SESSION_NAME.;
+1724      action riskRun.evaluatePortfolio /
+1725          envTable = {
+1726              caslib = "&RE_ENVTABLE_CASLIB.",
+1727              name = "&RE_ENVOUT_TABLE."
+1728          }
+1729          envOut = {
+1730              displayName = "&RE_PIPELINE_NAME._&RE_PROJECT_NAME._evalOut",
+1731              table = {
+1732                  caslib = "&RE_ENVOUT_CASLIB.",
+1733                  name = "&RE_ENVOUT_TABLE."
+1734              }
+1735          }
+1736          outVars = {
+38                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+1737              keep = {"pd_lr", "pd_master_scale", "pd_mid"}
+1738          }
+1739          crossClassVars = {"insttype", "Region", "instid", "ScoreCard_Date", "ead", "Drawn_EAD", "UnDrawn_EAD", "Beacon",
+1739! "Brokerage", "EAD_Segment"}
+1740          aggregateToBasecell = FALSE
+1741          outputs = {{
+1742              type = "ALLPRICE",
+1743              instVars = "CC",
+1744              table = {
+1745                  caslib = "&RE_ALLPRICE_CASLIB.",
+1746                  name = "&RE_ALLPRICE_TABLE."
+1747              }
+1748          }}
+1749          nScenDraws = 1
+1750          riskLog = {
+1751              logsOut = {
+1752                  caslib = "&RE_EVAL_METH_LOGS_CASLIB.",
+1753                  name = "&RE_EVAL_METH_LOGS_TABLE."
+1754              },
+1755              methodLevel = "TRACE"
+1756          }
+1757          valuesOut = {
+1758              caslib = "&RE_OUTPUT_CASLIB.",
+1759              name = "&RE_PIPELINE_NAME._&RE_PROJECT_NAME._values"
+1760          }
+1761      ;
+1762  run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+NOTE: Added action set 'riskRun'.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+39                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: Character value converted to numeric for argument 2 of '=' operation.
+NOTE: The variable 'undrawn_rwa' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'RWA' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'RW_obl' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'RW_Gua' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'pd_seg' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'pd_score' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'obligor_rwa' will be dropped from the output table 'MTG_Prototype_V1_values'.
+40                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+NOTE: The variable 'LGD_VE_Ratio' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_RETAIL' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_R_A' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_P_hat' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_p' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_MOC' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_Downturn_Markup' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_Downturn' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_C' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_12' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD_1' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'LGD' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'EL' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The variable 'drawn_rwa' will be dropped from the output table 'MTG_Prototype_V1_values'.
+NOTE: The table '_env03' in caslib 'Public' has 129 observations and 7 variables.
+NOTE: The table 'MTG_Prototype_V1_values' in caslib 'Public' has 35 observations and 13 variables.
+NOTE: The table 'MTG_Prototype_V1_allprice' in caslib 'Public' has 280 observations and 39 variables.
+NOTE: The table 'MTG_Prototype_V1_evalMethLog' in caslib 'Public' has 0 observations and 6 variables.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.18 seconds
+      cpu time            0.07 seconds
+      
+
+1763  
+
+1764  
+1765  /* Save the output tables created from the node: Evaluate Portfolio */
+1766  proc cas;
+1767      session &RE_CAS_SESSION_NAME.;
+1768  
+1769      table.tableExists result=r1 /  caslib="&RE_ALLPRICE_CASLIB." name="&RE_ALLPRICE_TABLE.";
+1770      if (r1.exists != 0) then do;
+1771          table.save /
+1772              table = {caslib="&RE_ALLPRICE_CASLIB.", name="&RE_ALLPRICE_TABLE."}
+1773              caslib="&RE_ALLPRICE_CASLIB."  name ="&RE_ALLPRICE_TABLE..sashdat" replace = True
+1774          ;
+1775      end;
+1776  
+1777  
+1778      table.tableExists result=r1 /  caslib="&RE_EVAL_METH_LOGS_CASLIB." name="&RE_EVAL_METH_LOGS_TABLE.";
+1779      if (r1.exists != 0) then do;
+1780          table.save /
+1781              table = {caslib="&RE_EVAL_METH_LOGS_CASLIB.", name="&RE_EVAL_METH_LOGS_TABLE."}
+1782              caslib="&RE_EVAL_METH_LOGS_CASLIB."  name ="&RE_EVAL_METH_LOGS_TABLE..sashdat" replace = True
+1783          ;
+1784      end;
+1785  
+1786  run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_allprice.sashdat in caslib Public.
+{caslib=Public,name=MTG_Prototype_V1_allprice.sashdat}
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_evalMethLog.sashdat in caslib Public.
+{caslib=Public,name=MTG_Prototype_V1_evalMethLog.sashdat}
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.02 seconds
+41                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+      
+
+1787  
+
+1788  %let RE_ENVTABLE_CASLIB=&RE_OUTPUT_CASLIB.;
+1789  %let RE_ENVTABLE_TABLE=_env03;
+1790  
+
+1791  %let RE_ENVTABLE_CASLIB=&RE_OUTPUT_CASLIB.;
+1792  %let RE_ENVTABLE_TABLE=_env03;
+1793  
+1794  
+1795  /* Include custom code content */
+1796  filename fref_5 filesrvc filename="custom_code_2.sas" folderuri="/folders/folders/a83bd802-e17a-4f3c-b86c-443d7ead2241";
+1797  %include fref_5 /source2;
+NOTE: %INCLUDE (level 1) file FREF_5 is file custom_code_2.sas.
+1798 +
+1799 +/* ----------------------------------------------------------------------
+1800 + * Execute Custom Code - 2
+1801 + * Title: Execute Custom Code
+1802 + * Program name: promote_env
+1803 + * ----------------------------------------------------------------------*/
+1804 +
+1805 +
+1806 +	
+1807 +
+1808 +proc cas;
+1809 +    action riskRun.promoteEnv /
+1810 +        envTable = {name = "&RE_ENVTABLE_TABLE" caslib = "&RE_ENVTABLE_CASLIB"}
+1811 +        replace = TRUE
+1812 +        types = {"ALL"};
+1813 +    run;
+NOTE: Active Session now _SESS_8995522310660864.
+NOTE: Starting PromoteEnv action.
+NOTE: Cloud Analytic Services promoted table MTG_PROTOTYPE_V1_VALUES in caslib Public to table MTG_Prototype_V1_values in caslib 
+      Public.
+NOTE: Cloud Analytic Services promoted table MTG_PROTOTYPE_V1_SCENSTATES in caslib Public to table MTG_Prototype_V1_scenStates in 
+      caslib Public.
+NOTE: Cloud Analytic Services promoted table MTG_PROTOTYPE_V1_EVALMETH in caslib Public to table MTG_Prototype_V1_evalMeth in 
+      caslib Public.
+NOTE: Cloud Analytic Services promoted table MTG_PROTOTYPE_V1_FUNCS in caslib Public to table MTG_Prototype_V1_funcs in caslib 
+      Public.
+NOTE: Cloud Analytic Services dropped table _env03 from caslib Public.
+NOTE: Cloud Analytic Services promoted table _ENV03 in caslib Public to table _env03 in caslib Public.
+NOTE: The table MTG_DATA in caslib Public was not promoted because it does not exist in the current session. It was most likely 
+      already promoted with drop=true.
+NOTE: The table MKT_MTG_CUR in caslib Public was not promoted because it does not exist in the current session. It was most likely 
+      already promoted with drop=true.
+NOTE: The table MKT_MTG_SCEN_BASE in caslib Public was not promoted because it does not exist in the current session. It was most 
+      likely already promoted with drop=true.
+NOTE: The table _env03 in caslib Public already exists as a global table. The global table will be dropped and replaced with the 
+      session scope table.
+1814 +quit;
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.03 seconds
+      cpu time            0.01 seconds
+      
+42                                                         The SAS System                        Tuesday, March 15, 2022 08:12:00 PM
+
+
+1815 +
+1816 +
+NOTE: %INCLUDE (level 1) ending.
+1817  
+
+1818  %let RE_ENVTABLE_CASLIB=Public;
+1819  %let RE_ENVTABLE_TABLE=_env03;
+1820  %let RE_SAVED_ENV_NAME=&RE_PIPELINE_NAME._Prototype_V1_env.sashdat;
+1821  
+1822  
+1823  /* Save the final environment. */
+1824  proc cas;
+1825      session &RE_CAS_SESSION_NAME.;
+1826      action riskRun.saveEnv /
+1827          envTable = {
+1828              caslib = "&RE_OUTPUT_CASLIB.",
+1829              name = "&RE_ENVTABLE_TABLE."
+1830          }
+1831          name = "&RE_PIPELINE_NAME._Prototype_V1_env"
+1832          fileType = "sashdat"
+1833          replace = TRUE
+1834          types = {"GENERATED", "ENVIRONMENT"}
+1835      ;
+1836  run;quit;
+NOTE: Active Session now _sess_8995522310660864.
+NOTE: Starting saveEnv action.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_values.sashdat in caslib Public.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_scenStates.sashdat in caslib Public.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_evalMeth.sashdat in caslib Public.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_funcs.sashdat in caslib Public.
+NOTE: Cloud Analytic Services saved the file MTG_Prototype_V1_env.sashdat in caslib Public.
+
+NOTE: PROCEDURE CAS used (Total process time):
+      real time           0.04 seconds
+      cpu time            0.02 seconds
+      
+
+1837  
+
+1838  %let RE_ENVTABLE_CASLIB=&RE_OUTPUT_CASLIB.;
+1839  %let RE_ENVTABLE_TABLE=_env03;
+1840  
+1841  
+1842  /* Include custom code content */
+1843  filename fref_6 filesrvc filename="custom_code_3.sas" folderuri="/folders/folders/a83bd802-e17a-4f3c-b86c-443d7ead2241";
+1844  %include fref_6 /source2;
+NOTE: %INCLUDE (level 1) file FREF_6 is file custom_code_3.sas.
+1845 +
+1846 +/* ----------------------------------------------------------------------
+1847 + * Execute Custom Code - 3
+1848 + * Title: Execute Custom Code
+1849 + * ----------------------------------------------------------------------*/
+1850 +
+1851 + proc printto; run;
+
